@@ -1,18 +1,26 @@
 const express = require("express");
 const app = express();
-const mysql = require('mysql');
-const cors = require('cors');
+const mysql = require("mysql");
+const cors = require("cors");
+const path = require("path");
 
 app.use(cors());
 app.use(express.json());
+// ****************
+const userRoutes = require("./routes/user");
 
-// *****************Connection a mangodb
+// ************************ Connection a mysql
 const db = mysql.createConnection({
-    user: "root",
-    host: "localhost",
-    password: "password",
-    database: "employeeSystem",
-  });
+  user: "root",
+  host:"localhost",
+  password: "password",
+  database: "employees_office",
+
+});
+db.connect(function(err) {
+  if (err) throw err;
+  console.log("Connecté à la base de données MySQL!");
+});
 // **********************Acceder a l'api sans probleme
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -26,13 +34,8 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.post("/create", (req, res) => {
-  const movieName = req.body.name;
-  const movieReview = req.body.age;
-})
 
-// app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
+app.use(".api/auth", userRoutes);
 
-// app.use("/api/sauces", saucesRoutes);
-// app.use("/api/auth", userRoutes);
 module.exports = app;
