@@ -34,20 +34,20 @@ Employee.findById = function (id, result) {
     }
   );
 };
-Employee.findByemail = function (email, result) {
-  dbConn.query(
-    "Select email, password from users",
-    email,
-    function (err, res) {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-      } else {
-        result(null, res);
-      }
-    }
-  );
-}; 
+// Employee.findByemail = function (email, result) {
+//   dbConn.query(
+//     "Select email, password from users",
+//     email,
+//     function (err, res) {
+//       if (err) {
+//         console.log("error: ", err);
+//         result(err, null);
+//       } else {
+//         result(null, res);
+//       }
+//     }
+//   );
+// }; 
 
 Employee.findAll = function (result) {
   dbConn.query("Select * from users", function (err, res) {

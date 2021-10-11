@@ -1,20 +1,57 @@
 "use strict";
 const Employee = require("../models/user");
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
-const db =require("../config/db.config")
+const jwt = require("jsonwebtoken");
+const db = require("../config/db.config");
 const mysql = require("mysql");
 require("dotenv").config();
 // *****************
-
-exports.login = async (req, res, next) => {
-
+exports.login = (req, res) => {
+  const buffer = Buffer.from(req.body.email);
+  const cryptedEmail = buffer.toString("base64");
+  db.query(
+    `SELECT * FROM users WHERE email='${cryptedEmail}'`,
+    (err, results) => {
+      if (results.length > 0) {
+        //Comparaison des mots de pass
+        bcrypt.compare(req.body.password, results[0].password).then((valid) => {
+          //Mots de passe pas ok
+          if (!valid) {
+            res.status(401).json({
+              message: "Mot de passe incorrect.",
+            });
+            //mots de passe ok
+          } else {
+            res.status(200).json({
+              userId: results[0].id,
+              first_name: results[0].first_name,
+              last_name: results[0].last_name,
+              age: results[0].age,
+              token: jwt.sign(
+                {
+                  userId: results[0].id,
+                },
+                process.env.DB_TOKEN,
+                {
+                  expiresIn: "24h",
+                }
+              ),
+            });
+          }
+        });
+      } else {
+        res.status(404).json({
+          message: "User not found",
+        });
+      }
+    }
+  );
 };
 // ************************
-exports.logout = function (req, res){
+exports.logout = function (req, res) {
   // res.cookie('jwt', '', { maxAge: 1 });
   // res.redirect('/');
-}
+};
 // **************************
 exports.users = function (req, res) {
   Employee.findAll(function (err, employee) {
@@ -23,11 +60,47 @@ exports.users = function (req, res) {
     console.log("res", employee);
     res.send(employee);
   });
-}; 
+};
 // ***************************
-exports.createone =  (req, res)=> {
- 
-    };
+exports.createone = (req, res) => {
+  const buffer = Buffer.from(req.body.email);
+  const cryptedEmail = buffer.toString("base64");
+  db.query(
+    `SELECT * FROM users WHERE email='${cryptedEmail}'`,
+    (err, results) => {
+      //Email non disponible
+      if (results.length > 0) {
+        res.status(401).json({
+          message: "Email non disponible.",
+        });
+      } else {
+        //hashage du mots de passe
+        bcrypt
+          .hash(req.body.password, 10)
+          .then((cryptedPassword) => {
+            //envoie a la base de donnée
+            db.query(
+              `INSERT INTO users VALUES (NULL, '${req.body.first_name}', '${req.body.last_name}','${req.body.age}','${req.body.position}','${cryptedEmail}','${cryptedPassword}')`,
+              (err, results) => {
+                if (err) {
+                  console.log(err);
+                  return res.status(400).json("erreur");
+                }
+                return res.status(201).json({
+                  message: "Compte crée",
+                });
+              }
+            );
+          })
+          .catch((error) =>
+            res.status(500).json({
+              error,
+            })
+          );
+      }
+    }
+  );
+};
 // ***********************************
 exports.user = function (req, res) {
   Employee.findById(req.params.id, function (err, employee) {
@@ -58,7 +131,6 @@ exports.delete = function (req, res) {
   });
 };
 
-
 //  const new_employee = new Employee(req.body);
 // //   handlle null error
 //   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
@@ -76,9 +148,6 @@ exports.delete = function (req, res) {
 //     });
 //   }
 
-
-
-
 // bcrypt
 //   .hash(req.body.password, 10)
 //   .then((hash) =>{
@@ -89,7 +158,7 @@ exports.delete = function (req, res) {
 //     const email= req.body.email;
 //     const password= hash;
 //     console.log(email);
-//     const envoie = 
+//     const envoie =
 //     " INSERT INTO users (first_name, last_name, age, position, email, password) VALUES ('"+
 //     first_name +
 //     "', '" +
