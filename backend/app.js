@@ -1,26 +1,17 @@
 const express = require("express");
-const app = express();
-const mysql = require("mysql");
-const cors = require("cors");
+const bodyParser = require('body-parser');
 const path = require("path");
+// *************securite
+const helmet = require("helmet");
+require("dotenv").config();
 
-app.use(cors());
-app.use(express.json());
-// ****************
-const userRoutes = require("./routes/user");
+const Userroute = require("./routes/user");
+const Postroute = require("./routes/post");
+const Commentroute = require("./routes/comment");
 
-// ************************ Connection a mysql
-const db = mysql.createConnection({
-  user: "root",
-  host:"localhost",
-  password: "password",
-  database: "employees_office",
-
-});
-db.connect(function(err) {
-  if (err) throw err;
-  console.log("Connecté à la base de données MySQL!");
-});
+// *************
+const app = express();
+app.use(helmet());
 // **********************Acceder a l'api sans probleme
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -34,8 +25,15 @@ app.use((req, res, next) => {
   );
   next();
 });
-
+app.use(express.json());
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+// parse requests of content-type - application/json
+app.use(bodyParser.json())
 app.use("/images", express.static(path.join(__dirname, "images")));
-app.use(".api/auth", userRoutes);
+// *********************Route
+app.use("/api/user", Userroute);
+app.use("/api/post", Postroute);
+app.use("api/comment", Commentroute);
 
 module.exports = app;

@@ -1,160 +1,168 @@
-import "./App.css";
-import { useState } from "react";
-import Axios from "axios";
+import React, { useState } from "react";
+import axios from "axios";
+import SignInForm from "./log/signin";
 
-function App() {
-  const [name, setName] = useState("");
+const SignUpForm = () => {
+  const [formSubmit, setFormSubmit] = useState(false);
+  const [first_name, setFirst_name] = useState("");
+  const [last_name, setLast_name] = useState("");
   const [age, setAge] = useState(0);
-  const [country, setCountry] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [position, setPosition] = useState("");
-  const [wage, setWage] = useState(0);
+  const [controlPassword, setControlPassword] = useState("");
 
-  const [newWage, setNewWage] = useState(0);
-
-  const [employeeList, setEmployeeList] = useState([]);
-
-  const addEmployee = () => {
-    Axios.post("http://localhost:3001/create", {
-      name: name,
-      age: age,
-      country: country,
-      position: position,
-      wage: wage,
-    }).then(() => {
-      setEmployeeList([
-        ...employeeList,
-        {
-          name: name,
-          age: age,
-          country: country,
-          position: position,
-          wage: wage,
-        },
-      ]);
-    });
-  };
-
-  const getEmployees = () => {
-    Axios.get("http://localhost:3001/employees").then((response) => {
-      setEmployeeList(response.data);
-    });
-  };
-
-  const updateEmployeeWage = (id) => {
-    Axios.put("http://localhost:3001/update", { wage: newWage, id: id }).then(
-      (response) => {
-        setEmployeeList(
-          employeeList.map((val) => {
-            return val.id === id
-              ? {
-                  id: val.id,
-                  name: val.name,
-                  country: val.country,
-                  age: val.age,
-                  position: val.position,
-                  wage: newWage,
-                }
-              : val;
-          })
-        );
-      }
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const terms = document.getElementById("terms");
+    const pseudoError = document.querySelector(".pseudo.error");
+    const emailError = document.querySelector(".email.error");
+    const passwordError = document.querySelector(".password.error");
+    const passwordConfirmError = document.querySelector(
+      ".password-confirm.error"
     );
-  };
+    const termsError = document.querySelector(".terms.error");
 
-  const deleteEmployee = (id) => {
-    Axios.delete(`http://localhost:3001/delete/${id}`).then((response) => {
-      setEmployeeList(
-        employeeList.filter((val) => {
-          return val.id !== id;
+    passwordConfirmError.innerHTML = "";
+    termsError.innerHTML = "";
+
+    if (password !== controlPassword || !terms.checked) {
+      if (password !== controlPassword)
+        passwordConfirmError.innerHTML =
+          "Les mots de passe ne correspondent pas";
+
+      if (!terms.checked)
+        termsError.innerHTML = "Veuillez valider les conditions générales";
+    } else {
+      await axios({
+        method: "post",
+        url: `http://localhost:4000/api/user/sign`,
+        data: {
+          first_name,
+          last_name,
+          age,
+          position,
+          email,
+          password,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          if (res.data.errors) {
+            pseudoError.innerHTML = res.data.errors.pseudo;
+            emailError.innerHTML = res.data.errors.email;
+            passwordError.innerHTML = res.data.errors.password;
+          } else {
+            setFormSubmit(true);
+          }
         })
-      );
-    });
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
-    <div className="App">
-      <div className="information">
-        <label>Name:</label>
-        <input
-          type="text"
-          onChange={(event) => {
-            setName(event.target.value);
-          }}
-        />
-        <label>Age:</label>
-        <input
-          type="number"
-          onChange={(event) => {
-            setAge(event.target.value);
-          }}
-        />
-        <label>Country:</label>
-        <input 
-          type="text"
-          onChange={(event) => {
-            setCountry(event.target.value);
-          }}
-        />
-        <label>Position:</label>
-        <input
-          type="text"
-          onChange={(event) => {
-            setPosition(event.target.value);
-          }}
-        />
-        <label>Wage (year):</label>
-        <input
-          type="number"
-          onChange={(event) => {
-            setWage(event.target.value);
-          }}
-        />
-        <button onClick={addEmployee}>Add Employee</button>
-      </div>
-      <div className="employees">
-        <button onClick={getEmployees}>Show Employees</button>
-
-        {employeeList.map((val, key) => {
-          return (
-            <div className="employee">
-              <div>
-                <h3>Name: {val.name}</h3>
-                <h3>Age: {val.age}</h3>
-                <h3>Country: {val.country}</h3>
-                <h3>Position: {val.position}</h3>
-                <h3>Wage: {val.wage}</h3>
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder="2000..."
-                  onChange={(event) => {
-                    setNewWage(event.target.value);
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    updateEmployeeWage(val.id);
-                  }}
-                >
-                  {" "}
-                  Update
-                </button>
-
-                <button
-                  onClick={() => {
-                    deleteEmployee(val.id);
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <>
+      {formSubmit ? (
+        <>
+          <SignInForm />
+          <span></span>
+          <h4 className="success">
+            Enregistrement réussi, veuillez-vous connecter
+          </h4>
+        </>
+      ) : (
+        <form action="" onSubmit={handleRegister} id="sign-up-form">
+          <label htmlFor="pseudo">first_name</label>
+          <br />
+          <input
+            type="text"
+            name="pseudo"
+            id="pseudo"
+            onChange={(e) => setFirst_name(e.target.value)}
+            value={first_name}
+          />
+          <div className="pseudo error"></div>
+          <br />
+          <label htmlFor="last_name">last_name</label>
+          <br />
+          <input
+            type="text"
+            name="last_name"
+            id="last_name"
+            onChange={(e) => setLast_name(e.target.value)}
+            value={last_name}
+          />
+          <div className="age error"></div>
+          <br />
+          <label htmlFor="age">Age</label>
+          <br />
+          <input
+            type="number"
+            name="age"
+            id="age"
+            onChange={(e) => setAge(e.target.value)}
+            value={age}
+          />
+          <div className="position error"></div>
+          <br />
+          <label htmlFor="age">Position</label>
+          <br />
+          <input
+            type="text"
+            name="position"
+            id="position"
+            onChange={(e) => setPosition(e.target.value)}
+            value={position}
+          />
+          <div className="pseudo error"></div>
+          <br />
+          <label htmlFor="email">Email</label>
+          <br />
+          <input
+            type="text"
+            name="email"
+            id="email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
+          <div className="email error"></div>
+          <br />
+          <label htmlFor="password">Mot de passe</label>
+          <br />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
+          <div className="password error"></div>
+          <br />
+          <label htmlFor="password-conf">Confirmer mot de passe</label>
+          <br/>
+          <input
+            type="password"
+            name="password"
+            id="password-conf"
+            onChange={(e) => setControlPassword(e.target.value)}
+            value={controlPassword}
+          />
+          <div className="password-confirm error"></div>
+          <br />
+          <input type="checkbox" id="terms" />
+          <label htmlFor="terms">
+            J'accepte les{" "}
+            <a href="/" target="_blank" rel="noopener noreferrer">
+              conditions générales
+            </a>
+          </label>
+          <div className="terms error"></div>
+          <br />
+          <input type="submit" value="Valider inscription" />
+        </form>
+      )}
+    </>
   );
-}
+};
 
-export default App;
+export default SignUpForm;
