@@ -1,13 +1,16 @@
 "use strict";
 var dbConn = require("../config/db.config");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 //Employee object create
-var Employee = function (user) {
+let Employee = function (user) {
   this.first_name = user.first_name;
   this.last_name = user.last_name;
   this.age = user.age;
   this.position = user.position;
   this.email = user.email;
   this.password = user.password;
+  this.admin = user.admin;
 };
 Employee.create = function (newEmp, result) {
   dbConn.query("INSERT INTO users set ?", newEmp, function (err, res) {
@@ -34,20 +37,6 @@ Employee.findById = function (id, result) {
     }
   );
 };
-// Employee.findByemail = function (email, result) {
-//   dbConn.query(
-//     "Select email, password from users",
-//     email,
-//     function (err, res) {
-//       if (err) {
-//         console.log("error: ", err);
-//         result(err, null);
-//       } else {
-//         result(null, res);
-//       }
-//     }
-//   );
-// }; 
 
 Employee.findAll = function (result) {
   dbConn.query("Select * from users", function (err, res) {
@@ -62,7 +51,7 @@ Employee.findAll = function (result) {
 };
 Employee.update = function (id, employee, result) {
   dbConn.query(
-    "UPDATE users SET first_name=?,last_name=?,age=?,position=?,email=?,password=?WHERE id = ?",
+    "UPDATE users SET first_name=?,last_name=?,age=?,position=?,email=?,password=?, admin=?, WHERE id = ?",
     [
       employee.first_name,
       employee.last_name,
@@ -70,6 +59,7 @@ Employee.update = function (id, employee, result) {
       employee.position,
       employee.email,
       employee.password,
+      employee.admin,
       id
     ],
     function (err, res) {

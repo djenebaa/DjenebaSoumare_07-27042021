@@ -1,14 +1,14 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const path = require("path");
+
 // *************securite
 const helmet = require("helmet");
 require("dotenv").config();
-
 const Userroute = require("./routes/user");
 const Postroute = require("./routes/post");
 const Commentroute = require("./routes/comment");
-
+const auth = require('./middleware/auth');
 // *************
 const app = express();
 app.use(helmet());
@@ -31,6 +31,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // parse requests of content-type - application/json
 app.use(bodyParser.json())
 app.use("/images", express.static(path.join(__dirname, "images")));
+
+// *******************
+app.get('/jwtid',auth, (req, res) => {
+  res.send("Authentificated");
+});
 // *********************Route
 app.use("/api/user", Userroute);
 app.use("/api/post", Postroute);
