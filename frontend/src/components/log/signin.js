@@ -4,7 +4,7 @@ import Axios from "axios";
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -26,10 +26,10 @@ const SignInForm = () => {
         if (res.data.errors) {
           emailError.innerHTML = res.data.errors.email;
           passwordError.innerHTML = res.data.errors.password;
-          // setStatus(false);
+          setStatus(false);
         } else {
-          window.location = "/";
-          // setStatus(true);
+          // window.location = "/";
+          setStatus(true);
           localStorage.setItem("token", res.data.token);
         }
       })
@@ -38,17 +38,18 @@ const SignInForm = () => {
       });
   };
 
-//  const userAuthenticated =()=>{
-//     Axios.get("http://localhost:4000/jwtid",
-//     {
-//       headers:{
-//         "x-access-token":localStorage.getItem("token"),
-//       }
-//     })
-//     .then((response)=>{
-//       console.log(response);
-//     })
-//   };
+ const userAuthenticated =()=>{
+    Axios.get("http://localhost:4000/jwtid",
+    {
+      headers:{
+        "x-access-token":localStorage.getItem("token"),
+      }
+    })
+    .then((response)=>{
+      console.log(response);
+    })
+  };
+
   return (
     <form action="" onSubmit={handleLogin} id="sign-up-form">
       <label htmlFor="email">Email</label>
@@ -73,9 +74,9 @@ const SignInForm = () => {
       />
       <div className="password error"></div>
       <input type="submit" value="Se connecter" />
-      {/* {status && (
+      {status && (
         <button onClick={userAuthenticated}>Check if Auth true </button>
-      )} */}
+      )}
     </form>
   );
 };

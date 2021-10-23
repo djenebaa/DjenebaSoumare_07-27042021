@@ -54,6 +54,7 @@ const SignUpForm = () => {
             pseudoError.innerHTML = res.data.errors.pseudo;
             emailError.innerHTML = res.data.errors.email;
             passwordError.innerHTML = res.data.errors.password;
+            localStorage.setItem("user", JSON.stringify(res.data))
           } else {
             setFormSubmit(true);
           }
@@ -177,5 +178,7 @@ const SignUpForm = () => {
     </>
   );
 };
-
+// logout(){
+//   localStorage.removeItem("user");
+// }
 export default SignUpForm;
