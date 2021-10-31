@@ -1,36 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Axios from "axios";
 
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
     const emailError = document.querySelector(".email.error");
     const passwordError = document.querySelector(".password.error");
-
+    Axios.defaults.withCredentials = true;
     Axios({
       method: "post",
       url: `http://localhost:4000/api/user/login`,
-      // withCredentials:true,
+      withCredentials: true,
       data: {
         email,
         password,
       },
     })
       .then((res) => {
-        // console.log(res.data);
-
+        // console.log(res);
         if (res.data.errors) {
           emailError.innerHTML = res.data.errors.email;
           passwordError.innerHTML = res.data.errors.password;
           setStatus(false);
         } else {
           // window.location = "/";
+          console.log(res.data);
           setStatus(true);
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("user", JSON.stringify(res.data));
         }
       })
       .catch((err) => {
@@ -38,17 +39,27 @@ const SignInForm = () => {
       });
   };
 
- const userAuthenticated =()=>{
-    Axios.get("http://localhost:4000/jwtid",
-    {
-      headers:{
-        "x-access-token":localStorage.getItem("token"),
-      }
-    })
-    .then((response)=>{
+  const userAuthenticated = () => {
+    Axios.get("http://localhost:4000/api/user/login", {
+      headers: {
+        "x-access-token":localStorage.getItem("token")
+      },
+    }).then((response) => {
       console.log(response);
-    })
+    });
   };
+
+  // const logout =()=>{
+  //   localStorage.removeItem("user");
+  //
+  // ********************************
+  // useEffect(() => {
+  //   Axios.get("http://localhost:4000/api/user/login").then((res) => {
+  //     if (res.data.loggedIn === false) {
+  //       setStatus(res.data);
+  //     }
+  //   });
+  // }, []);
 
   return (
     <form action="" onSubmit={handleLogin} id="sign-up-form">

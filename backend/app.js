@@ -8,13 +8,17 @@ require("dotenv").config();
 const Userroute = require("./routes/user");
 const Postroute = require("./routes/post");
 const Commentroute = require("./routes/comment");
-const auth = require('./middleware/auth');
+const requireAuth= require('./middleware/auth')
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 // *************
+
 const app = express();
 app.use(helmet());
 // **********************Acceder a l'api sans probleme
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Credentials",true)
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
@@ -25,6 +29,17 @@ app.use((req, res, next) => {
   );
   next();
 });
+// ******************************
+app.use(session({
+  key:'userId',
+  secret:"subscribe",
+  resave:false,
+  saveUninitialized:false,
+  cookie:{
+    expires: 60*60*24
+  }
+}))
+app.use(cookieParser())
 app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -33,8 +48,8 @@ app.use(bodyParser.json())
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // *******************
-app.get('/jwtid',auth, (req, res) => {
-  res.send("Authentificated");
+app.get('/jwtid',requireAuth, (req, res) => {
+  res.status(200).send("good")
 });
 // *********************Route
 app.use("/api/user", Userroute);

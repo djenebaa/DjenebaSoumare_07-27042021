@@ -1,9 +1,10 @@
  const http = require('http');
  const app = require('./app');
- 
  const cors = require('cors');
+ const cookieParser = require('cookie-parser');
  app.use(cors());
- 
+
+
  const normalizePort = val => {
    const port = parseInt(val, 10);
  
@@ -37,9 +38,9 @@
        throw error;
    }
  };
- 
+app.use(cookieParser());
+// **********************
  const server = http.createServer(app);
- 
  server.on('error', errorHandler);
  server.on('listening', () => {
    const address = server.address();

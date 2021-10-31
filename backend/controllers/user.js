@@ -3,8 +3,9 @@ const Employee = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.config");
-
+const { createTokens, validateToken } = require("../middleware/JWT");
 require("dotenv").config();
+
 // *****************
 exports.login = (req, res) => {
   const buffer = Buffer.from(req.body.email);
@@ -15,11 +16,18 @@ exports.login = (req, res) => {
       bcrypt.compare(req.body.password, user[0].password).then((valid) => {
         //Mots de passe pas ok
         if (!valid) {
+          // res.json({ auth: false, message: "wrong username/password" });
           res.status(401).json({
             message: "Mot de passe incorrect.",
           });
           //mots de passe ok
-        } else {
+        } else {  
+          const accessToken = createTokens(user)
+          res.cookie("access-token", accessToken, {
+            maxAge: 3 * 24 * 60 * 60 * 1000,
+            secure: true,
+            sameSite: "none",
+          }); 
           res.status(200).json({
             userId: user[0].id,
             first_name: user[0].first_name,
@@ -35,14 +43,25 @@ exports.login = (req, res) => {
               }
             ),
           });
-        }
+        //  res.json({ auth: true,result: user });
+        }     
       });
     } else {
+       
       res.status(404).json({
         message: "User not found",
-      });
+      }); 
+      // res.json({ auth: false, message: "no user exist" });
     }
   });
+};
+// ****************
+exports.userlogin = function (req, res) {
+  if (req.session.user) {
+    res.send({ loggedIn: true, user: req.session.user });
+  } else {
+    res.send({ loggedIn: false });
+  }
 };
 // ************************
 exports.logout = function (req, res) {
@@ -124,3 +143,10 @@ exports.delete = function (req, res) {
     res.json({ error: false, message: "Employee successfully deleted" });
   });
 };
+// *********************************
+// exports.admin = function (req,res) {
+//   Employee.findbyname(req.params.first_name, function (err, employee) {
+//     if (err) res.send(err);
+//     res.json(employee);
+//   });
+//   };

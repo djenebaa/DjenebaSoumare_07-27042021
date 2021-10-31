@@ -1,7 +1,6 @@
 "use strict";
 var dbConn = require("../config/db.config");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+
 //Employee object create
 let Employee = function (user) {
   this.first_name = user.first_name;
@@ -51,7 +50,7 @@ Employee.findAll = function (result) {
 };
 Employee.update = function (id, employee, result) {
   dbConn.query(
-    "UPDATE users SET first_name=?,last_name=?,age=?,position=?,email=?,password=?, admin=?, WHERE id = ?",
+    "UPDATE users SET `first_name`=?,`last_name`=?,`age`=?,`position`=?,`email`=?,`password`=?, `admin`=? WHERE `id` = ?",
     [
       employee.first_name,
       employee.last_name,
@@ -82,4 +81,19 @@ Employee.delete = function (id, result) {
     }
   });
 };
+
+// Employee.findbyname = function (first_name, result) {
+//   dbConn.query(
+//    "Select *from users where first_name ='Admin'",
+//     first_name,
+//     function (err, res) {
+//       if (err) {
+//         console.log("error: ", err);
+//         result(err, null);
+//       } else {
+//         result(null, res);
+//       }
+//     }
+//   );
+// };
 module.exports = Employee;

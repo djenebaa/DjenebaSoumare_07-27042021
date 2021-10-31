@@ -62,7 +62,6 @@ const SignUpForm = () => {
         .catch((err) => console.log(err));
     }
   };
-
   return (
     <>
       {formSubmit ? (
@@ -178,7 +177,7 @@ const SignUpForm = () => {
     </>
   );
 };
-// logout(){
+// const logout()=>{
 //   localStorage.removeItem("user");
 // }
 export default SignUpForm;
