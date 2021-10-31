@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Axios from "axios";
 
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("");
+  // const [status, setStatus] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -25,11 +25,11 @@ const SignInForm = () => {
         if (res.data.errors) {
           emailError.innerHTML = res.data.errors.email;
           passwordError.innerHTML = res.data.errors.password;
-          setStatus(false);
+          // setStatus(false);
         } else {
-          // window.location = "/";
+          window.location = "/";
           console.log(res.data);
-          setStatus(true);
+          // setStatus(true);
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("user", JSON.stringify(res.data));
         }
@@ -39,16 +39,16 @@ const SignInForm = () => {
       });
   };
 
-  const userAuthenticated = () => {
-    Axios.get("http://localhost:4000/api/user/login", {
-      headers: {
-        "x-access-token":localStorage.getItem("token")
-      },
-    }).then((response) => {
-      console.log(response);
-    });
-  };
-
+  // const userAuthenticated = () => {
+  //   Axios.get("http://localhost:4000/jwtid", {
+  //     headers: {
+  //       "x-access-token":localStorage.getItem("token")
+  //     },
+  //   }).then((response) => {
+  //     console.log(response);
+  //   });
+  // };
+  
   // const logout =()=>{
   //   localStorage.removeItem("user");
   //
@@ -85,9 +85,9 @@ const SignInForm = () => {
       />
       <div className="password error"></div>
       <input type="submit" value="Se connecter" />
-      {status && (
+      {/* {status && (
         <button onClick={userAuthenticated}>Check if Auth true </button>
-      )}
+      )} */}
     </form>
   );
 };

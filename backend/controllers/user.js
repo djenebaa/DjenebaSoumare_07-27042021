@@ -4,9 +4,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.config");
 const { createTokens, validateToken } = require("../middleware/JWT");
+const session = require('express-session');
 require("dotenv").config();
-
-// *****************
+//*****************
 exports.login = (req, res) => {
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString("base64");
@@ -55,7 +55,7 @@ exports.login = (req, res) => {
     }
   });
 };
-// ****************
+
 exports.userlogin = function (req, res) {
   if (req.session.user) {
     res.send({ loggedIn: true, user: req.session.user });

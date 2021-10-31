@@ -8,10 +8,10 @@ const {createTokens, validateToken}= require("../middleware/JWT");
 
 
     app.post("/sign", passwordcheck, user.createone);
-    app.post("/login", user.login)
+    app.post("/login", user.login);
     app.get("/login", user.userlogin)
     app.get("/logout", user.logout)
-    app.get("/", user.users);
+    app.get("/",auth, user.users);
     app.get("/admin",authPage(["Admin"]),auth, user.users);
     app.get("/:id",auth, user.user);
     app.put("/:id",auth, user.update);
