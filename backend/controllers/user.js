@@ -4,24 +4,24 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.config");
 const { createTokens, validateToken } = require("../middleware/JWT");
-const session = require('express-session');
-require("dotenv").config();
-//*****************
-exports.login = (req, res) => {
+
+exports.login=(req,res)=>{
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString("base64");
-  db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`, (err, user) => {
+  db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`, (err,user) => {
     if (user.length > 0) {
       //Comparaison des mots de pass
       bcrypt.compare(req.body.password, user[0].password).then((valid) => {
         //Mots de passe pas ok
         if (!valid) {
-          // res.json({ auth: false, message: "wrong username/password" });
+          res.json({ auth: false, message: "wrong username/password" });
           res.status(401).json({
             message: "Mot de passe incorrect.",
           });
           //mots de passe ok
         } else {  
+          req.session.user= user;
+          // console.log(req.session.user);
           const accessToken = createTokens(user)
           res.cookie("access-token", accessToken, {
             maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -51,10 +51,10 @@ exports.login = (req, res) => {
       res.status(404).json({
         message: "User not found",
       }); 
-      // res.json({ auth: false, message: "no user exist" });
+      res.json({ auth: false, message: "no user exist" });
     }
   });
-};
+}
 
 exports.userlogin = function (req, res) {
   if (req.session.user) {

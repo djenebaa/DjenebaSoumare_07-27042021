@@ -8,10 +8,10 @@ export const GET_USER = "GET_USER";
 
 export const GET_USER_ERRORS = "GET_USER_ERRORS";
 
-export const getUser = (id) => {
+export const getUser = (uid) => {
   return (dispatch) => {
     return axios
-      .get(`http://localhost:4000/api/user/${id}`)
+      .get(`http://localhost:4000/api/user/${uid}`)
       .then((res) => {
         dispatch({ type: GET_USER, payload: res.data });
       })

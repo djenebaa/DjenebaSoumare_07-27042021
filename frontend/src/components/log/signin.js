@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import Axios from "axios";
 
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [status, setStatus] = useState("");
-
+  const[status, setstatus]= useState("");
+  Axios.defaults.withCredentials = true;
   const handleLogin = (e) => {
     e.preventDefault();
+   
     const emailError = document.querySelector(".email.error");
     const passwordError = document.querySelector(".password.error");
-    Axios.defaults.withCredentials = true;
+   
     Axios({
       method: "post",
       url: `http://localhost:4000/api/user/login`,
@@ -25,20 +26,20 @@ const SignInForm = () => {
         if (res.data.errors) {
           emailError.innerHTML = res.data.errors.email;
           passwordError.innerHTML = res.data.errors.password;
-          // setStatus(false);
+          setstatus(res.data.erros)
         } else {
-          window.location = "/";
+          // window.location = "/";
           console.log(res.data);
-          // setStatus(true);
-          localStorage.setItem("token", res.data.token);
+        localStorage.setItem("token", res.data.token);
           localStorage.setItem("user", JSON.stringify(res.data));
+          setstatus(res.data.first_name)
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
+  
   // const userAuthenticated = () => {
   //   Axios.get("http://localhost:4000/jwtid", {
   //     headers: {
@@ -53,13 +54,13 @@ const SignInForm = () => {
   //   localStorage.removeItem("user");
   //
   // ********************************
-  // useEffect(() => {
-  //   Axios.get("http://localhost:4000/api/user/login").then((res) => {
-  //     if (res.data.loggedIn === false) {
-  //       setStatus(res.data);
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    Axios.get("http://localhost:4000/api/user/login").then((res) => {
+      if(res.data.loggedIn === true){
+     setstatus(res.data.user[0].first_name);
+      }
+    });
+  }, []);
 
   return (
     <form action="" onSubmit={handleLogin} id="sign-up-form">
@@ -84,10 +85,8 @@ const SignInForm = () => {
         value={password}
       />
       <div className="password error"></div>
-      <input type="submit" value="Se connecter" />
-      {/* {status && (
-        <button onClick={userAuthenticated}>Check if Auth true </button>
-      )} */}
+      <input  type="submit" value="Se connecter" />
+      <h1>{status}</h1>
     </form>
   );
 };
