@@ -36,7 +36,7 @@ app.use(session({
   resave:false,
   saveUninitialized:false,
   cookie:{
-    expires: 60*60*24
+    expires:  3 * 24 * 60 * 60 * 1000,       //a voir si session longue ou pas 60*60*24      
   }
 }))
 app.use(cookieParser())

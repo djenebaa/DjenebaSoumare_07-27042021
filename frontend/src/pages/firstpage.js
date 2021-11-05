@@ -1,11 +1,23 @@
-import React from "react";
 
-const firstpage = () => {
-    return (
-      <div>
-     Home
-      </div>
-    );
-  };
+// import Log from "../components/log/signin";
+import React, {useContext}from "react";
+import { LoginContext } from "../components/AppContext";
 
-  export default firstpage;
+const Home = () => {
+  const Login = useContext(LoginContext);
+
+  return (
+    <div className="profil-page">
+      {Login ? (
+        <div>
+          <h1>Yes</h1>
+          </div>
+      ) : (
+       <div>
+         <h1>Not</h1>
+         </div>
+      )}
+    </div>
+  );
+}
+  export default Home;

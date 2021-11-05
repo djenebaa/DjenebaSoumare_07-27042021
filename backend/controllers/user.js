@@ -23,7 +23,7 @@ exports.login=(req,res)=>{
           req.session.user= user;
           // console.log(req.session.user);
           const accessToken = createTokens(user)
-          res.cookie("access-token", accessToken, {
+          res.cookie("accessToken", accessToken, {
             maxAge: 3 * 24 * 60 * 60 * 1000,
             secure: true,
             sameSite: "none",
@@ -65,8 +65,9 @@ exports.userlogin = function (req, res) {
 };
 // ************************
 exports.logout = function (req, res) {
-  functions.eraseCookie(res);
-  res.redirect("/");
+  res.cookie('userId', '', { maxAge: 1 });
+  res.redirect('/');
+  
 };
 // **************************
 exports.users = function (req, res) {
@@ -81,6 +82,7 @@ exports.users = function (req, res) {
 exports.createone = (req, res) => {
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString("base64");
+ 
   db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`, (err, user) => {
     //Email non disponible
     if (user.length > 0) {
@@ -94,7 +96,7 @@ exports.createone = (req, res) => {
         .then((haspassword) => {
           //envoie a la base de donnée
           db.query(
-            `INSERT INTO users VALUES (NOT NULL,'${req.body.first_name}', '${req.body.last_name}','${req.body.age}','${req.body.position}','${cryptedEmail}','${haspassword}','${req.body.admin}')`,
+            `INSERT INTO users VALUES (NOT NULL,'${req.body.first_name}', '${req.body.last_name}','${req.body.age}','${req.body.position}','${cryptedEmail}','${haspassword}','${req.body.photo}')`,
             (err, results) => {
               if (err) {
                 console.log(err);
@@ -118,7 +120,7 @@ exports.createone = (req, res) => {
 exports.user = function (req, res) {
   Employee.findById(req.params.id, function (err, employee) {
     if (err) res.send(err);
-    res.json(employee);
+    res.json(employee)///ou json ?
   });
 };
 exports.update = function (req, res) {

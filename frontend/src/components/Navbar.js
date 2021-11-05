@@ -1,11 +1,11 @@
 import React, {useContext} from 'react';
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { UidContext } from "./AppContext";
-import Logout from "./log/Logout";
 
+import { NavLink } from "react-router-dom";
+import { LoginContext } from './AppContext';
+import Logout from "./log/Logout";
+import { useSelector } from "react-redux";
 const Navbar =()=> {
-    const uid = useContext(UidContext);
+  const loggedIn = useContext(LoginContext);
   const userData = useSelector((state) => state.userReducer);
    return (
  <nav>
@@ -18,12 +18,12 @@ const Navbar =()=> {
     </div>
     </NavLink>
    </div>
-   {uid ? (
+   {loggedIn ? (
     <ul>
       <li></li>
       <li className="welcome">
         <NavLink exact to="/profil">
-          <h5>Bienvenue {userData.pseudo}</h5>
+          <h5>Bienvenue {userData.first_name}</h5>
         </NavLink>
       </li>
       <Logout />

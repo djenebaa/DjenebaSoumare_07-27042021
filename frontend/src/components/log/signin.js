@@ -1,7 +1,8 @@
-import React, { useState,useEffect} from "react";
+import React, { useState} from "react";
 import Axios from "axios";
-
+// import  {LoginContext} from "../AppContext"
 const SignInForm = () => {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const[status, setstatus]= useState("");
@@ -28,10 +29,10 @@ const SignInForm = () => {
           passwordError.innerHTML = res.data.errors.password;
           setstatus(res.data.erros)
         } else {
-          // window.location = "/";
+          window.location = "/";
           console.log(res.data);
-        localStorage.setItem("token", res.data.token);
-          localStorage.setItem("user", JSON.stringify(res.data));
+          localStorage.setItem("token", res.data.token);
+        //   localStorage.setItem("user", JSON.stringify(res.data));
           setstatus(res.data.first_name)
         }
       })
@@ -54,14 +55,14 @@ const SignInForm = () => {
   //   localStorage.removeItem("user");
   //
   // ********************************
-  useEffect(() => {
-    Axios.get("http://localhost:4000/api/user/login").then((res) => {
-      if(res.data.loggedIn === true){
-     setstatus(res.data.user[0].first_name);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   Axios.get("http://localhost:4000/api/user/login").then((res) => {
+  //     if(res.data.loggedIn === true){
 
+  // setstatus(res.data.user[0].first_name);
+  //     }
+  //   });
+  // }, []);
   return (
     <form action="" onSubmit={handleLogin} id="sign-up-form">
       <label htmlFor="email">Email</label>
@@ -85,10 +86,13 @@ const SignInForm = () => {
         value={password}
       />
       <div className="password error"></div>
-      <input  type="submit" value="Se connecter" />
+      <input type="submit" value="Se connecter"/>
       <h1>{status}</h1>
+    
+
     </form>
   );
 };
 
 export default SignInForm;
+// onClick={LoginContext(true)} 

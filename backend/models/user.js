@@ -9,7 +9,7 @@ let Employee = function (user) {
   this.position = user.position;
   this.email = user.email;
   this.password = user.password;
-  this.admin = user.admin;
+  this.photo = user.photo;
 };
 Employee.create = function (newEmp, result) {
   dbConn.query("INSERT INTO users set ?", newEmp, function (err, res) {
@@ -22,17 +22,18 @@ Employee.create = function (newEmp, result) {
     }
   });
 };
-Employee.findById = function (id, result) {
+Employee.findById = function (id,result, user) {
   dbConn.query(
-    "Select * from users where id = ? ",
+    "Select * from users where id= ? ",  // enlever mdp etc 
     id,
     function (err, res) {
       if (err) {
         console.log("error: ", err);
         result(err, null);
       } else {
-        result(null, res);
+      result(null, res[0])
       }
+      ;
     }
   );
 };
@@ -48,17 +49,18 @@ Employee.findAll = function (result) {
     }
   });
 };
+//  `first_name`=?,`last_name`=?,`age`=?,`position`=?,`email`=?,`password`=?,
 Employee.update = function (id, employee, result) {
   dbConn.query(
-    "UPDATE users SET `first_name`=?,`last_name`=?,`age`=?,`position`=?,`email`=?,`password`=?, `admin`=? WHERE `id` = ?",
-    [
-      employee.first_name,
-      employee.last_name,
-      employee.age,
-      employee.position,
-      employee.email,
-      employee.password,
-      employee.admin,
+    "UPDATE users SET `photo`=? WHERE `id` = ?", // email et mdp pas hacher 
+    [ 
+      // employee.first_name,
+      // employee.last_name,
+      // employee.age,
+      // employee.position,
+      // employee.email,
+      // employee.password,
+      employee.photo,
       id
     ],
     function (err, res) {
@@ -71,6 +73,7 @@ Employee.update = function (id, employee, result) {
     }
   );
 };
+
 Employee.delete = function (id, result) {
   dbConn.query("DELETE FROM users WHERE id = ?", [id], function (err, res) {
     if (err) {

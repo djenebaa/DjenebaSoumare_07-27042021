@@ -8,10 +8,10 @@ export const GET_USER = "GET_USER";
 
 export const GET_USER_ERRORS = "GET_USER_ERRORS";
 
-export const getUser = (uid) => {
+export const getUser = (loggedIn) => {
   return (dispatch) => {
     return axios
-      .get(`http://localhost:4000/api/user/${uid}`)
+      .get(`http://localhost:4000/api/user/${loggedIn}`)
       .then((res) => {
         dispatch({ type: GET_USER, payload: res.data });
       })
@@ -22,7 +22,7 @@ export const getUser = (uid) => {
 // export const uploadPicture = (data, id) => {
 //   return (dispatch) => {
 //     return axios
-//       .post(`http://localhost:4000/api/user/upload`, data)
+//       .post(`http://localhost:4000/api/user/login`, data)
 //       .then((res) => {
 //         if (res.data.errors) {
 //           dispatch({ type: GET_USER_ERRORS, payload: res.data.errors });

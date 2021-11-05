@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
 
 
 // module.exports = (req, res, next) =>{
-//   const token = req.headers["x-access-token"];
+//   const token = req.cookies.userId;
 // if (!token) { 
 //   res.send("need id")
 // } 
@@ -40,6 +40,7 @@ module.exports = (req, res, next) => {
 //     })
 //   }
 // }
+
 
 //req.headers.authorization.split(' ')[1];
 
