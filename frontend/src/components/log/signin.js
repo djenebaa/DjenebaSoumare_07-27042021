@@ -5,7 +5,7 @@ const SignInForm = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const[status, setstatus]= useState("");
+  // const[status, setstatus]= useState("");
   Axios.defaults.withCredentials = true;
   const handleLogin = (e) => {
     e.preventDefault();
@@ -27,13 +27,13 @@ const SignInForm = () => {
         if (res.data.errors) {
           emailError.innerHTML = res.data.errors.email;
           passwordError.innerHTML = res.data.errors.password;
-          setstatus(res.data.erros)
+          // setstatus(res.data.erros)
         } else {
           window.location = "/";
           console.log(res.data);
           localStorage.setItem("token", res.data.token);
         //   localStorage.setItem("user", JSON.stringify(res.data));
-          setstatus(res.data.first_name)
+          // setstatus(res.data.first_name)
         }
       })
       .catch((err) => {
@@ -42,7 +42,7 @@ const SignInForm = () => {
   };
   
   // const userAuthenticated = () => {
-  //   Axios.get("http://localhost:4000/jwtid", {
+  //   Axios.get("http://localhost:4000/api/user/login", {
   //     headers: {
   //       "x-access-token":localStorage.getItem("token")
   //     },
@@ -87,7 +87,7 @@ const SignInForm = () => {
       />
       <div className="password error"></div>
       <input type="submit" value="Se connecter"/>
-      <h1>{status}</h1>
+      {/* <h1>{status}</h1> */}
     
 
     </form>

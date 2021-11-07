@@ -14,8 +14,10 @@ const App = () => {
       method: "get",  
         url: `http://localhost:4000/api/user/login`,
         withCredentials: true,
+        // headers:{
+        //   "x-access-token":localStorage.getItem("token")
+        // }
            })
-      
         .then((response) => {
           setLoggedIn(response.data.user[0].id);
         })

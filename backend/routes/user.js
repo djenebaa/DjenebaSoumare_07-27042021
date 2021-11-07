@@ -8,7 +8,7 @@ const {createTokens, validateToken}= require("../middleware/JWT");
 const multer = require('../middleware/multer-config')
 
 
-    app.post("/sign", passwordcheck, user.createone);
+    app.post("/sign",passwordcheck, user.createone);
     app.post("/login", user.login);
     app.get("/login", user.userlogin)
     app.get("/logout", user.logout)

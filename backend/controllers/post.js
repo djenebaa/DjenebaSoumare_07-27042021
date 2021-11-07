@@ -26,16 +26,16 @@ exports.getallpost = (req, res) => {
 // Create
 exports.create = (req, res) => {
   const post = new Post({
-    photo: `${req.protocol}://${req.get("host")}/images/${
-      req.body.photo
-    }`,
+    photo: req.body.photo, 
     post_name: req.body.post_name,
     date: req.body.date,
-    id: req.body.id,
+    userId:req.body.userId, // ????????????????????
+    // id: req.body.id,
     like: req.body.like,
     dislike: req.body.dislike,
     usersliked: req.body.usersliked,
     usersdisliked: req.body.usersdisliked
+   
    
   }); 
   console.log(post);
@@ -55,7 +55,7 @@ exports.create = (req, res) => {
       });
     }
 };
-// Update
+
 exports.update = (req, res) => {
   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
     res
@@ -72,6 +72,9 @@ exports.update = (req, res) => {
     );
   }
 };
+
+
+
 
 // Delete
 exports.delete = (req, res) => {

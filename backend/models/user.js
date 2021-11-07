@@ -22,6 +22,7 @@ Employee.create = function (newEmp, result) {
     }
   });
 };
+
 Employee.findById = function (id,result, user) {
   dbConn.query(
     "Select * from users where id= ? ",  // enlever mdp etc 

@@ -8,6 +8,7 @@ let Post = function (user) {
   this.date = new Date();
   this.photo = user.photo;
   this.like = user.like;
+  this.userId = user.userId
   this.dislike = user.dislike;
   this.usersliked = user.usersliked;
   this.usersdisliked = user.usersdisliked
@@ -26,7 +27,7 @@ Post.createpost = function (newpost, result) {
   };
   
 Post.findAll = function (result) {
-    dbConn.query("Select * from post", function (err, res) {
+    dbConn.query("Select * from post ORDER BY date desc", function (err, res) {
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -38,7 +39,7 @@ Post.findAll = function (result) {
   };
   Post.findOne = function (id, result) {
     dbConn.query(
-      "Select * from post where id = ? ",
+      "Select * from post where id = ? ",   //id user ?
       id,
       function (err, res) {
         if (err) {
@@ -53,13 +54,12 @@ Post.findAll = function (result) {
   
   Post.update = function (id, post, result) {
     dbConn.query(
-      "UPDATE post SET `post_name`=?,`date`=?,photo=?,`like`=?,dislike=? WHERE `id` = ? ",
+      "UPDATE post SET `post_name`=? WHERE `id` = ? ",
       [
         post.post_name,
-        post.date,
-        post.photo,
-        post.like,
-        post.dislike,
+        // post.photo,
+        // post.like,
+        // post.dislike,
         id,
       ],
       function (err, res) {

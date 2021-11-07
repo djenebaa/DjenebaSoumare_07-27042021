@@ -11,7 +11,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [position, setPosition] = useState("");
   const [controlPassword, setControlPassword] = useState("");
-  const [admin, setAdmin] = useState(0);
+  // const [admin, setAdmin] = useState(0);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -45,7 +45,7 @@ const SignUpForm = () => {
           position,
           email,
           password,
-          admin,
+         
         },
       })
         .then((res) => {
@@ -150,17 +150,6 @@ const SignUpForm = () => {
             value={controlPassword}
           />
           <div className="password-confirm error"></div>
-          <br />
-          <label htmlFor="pseudo">Admin</label>
-          <br />
-          <input
-            type="number"
-            name="admin"
-            id="admin"
-            onChange={(e) => setAdmin(e.target.value)}
-            value={admin}
-          />
-          <div className="pseudo error"></div>
           <br />
           <input type="checkbox" id="terms" />
           <label htmlFor="terms">
