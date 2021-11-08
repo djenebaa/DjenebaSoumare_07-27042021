@@ -66,6 +66,7 @@ exports.userlogin = function (req, res) {
 // ************************
 exports.logout = function (req, res) {
   res.cookie('userId', '', { maxAge: 1 });
+  res.cookie('accessToken','', {maxAge:1})
   res.redirect('/');
   
 };
@@ -82,7 +83,6 @@ exports.users = function (req, res) {
 exports.createone = (req, res) => {
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString("base64");
- 
   db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`, (err, user) => {
     //Email non disponible
     if (user.length > 0) {

@@ -10,7 +10,6 @@ const NewPostForm = () => {
   const [postPhoto, setPhoto] = useState(null);
   const [file, setFile] = useState();   // image
   const userData = useSelector((state) => state.userReducer);
-  // const error = useSelector((state) => state.errorReducer.postError);
   const dispatch = useDispatch();
 
  const handlePost = async () => {
@@ -104,3 +103,4 @@ const NewPostForm = () => {
   );
 };
 export default NewPostForm;
+// 

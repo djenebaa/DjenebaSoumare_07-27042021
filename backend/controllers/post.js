@@ -23,14 +23,16 @@ exports.getallpost = (req, res) => {
 
 };
 
-// Create
-exports.create = (req, res) => {
+
+exports.create =   (req, res) => {
+ 
   const post = new Post({
-    photo: req.body.photo, 
+    photo: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`, 
     post_name: req.body.post_name,
     date: req.body.date,
-    userId:req.body.userId, // ????????????????????
-    // id: req.body.id,
+    userId:req.body.userId, 
     like: req.body.like,
     dislike: req.body.dislike,
     usersliked: req.body.usersliked,
