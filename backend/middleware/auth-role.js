@@ -9,4 +9,4 @@ return(req, res, next)=>{
 }
 };
 
-module.exports = { authPage};
+module.exports = {authPage};

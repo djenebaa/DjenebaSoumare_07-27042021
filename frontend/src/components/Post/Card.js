@@ -86,6 +86,13 @@ const Card = ({ post }) => {
                 <DeleteCard id={post.id} />
               </div>
             )}
+            {/* ***************Admin peut supprimer les post  */}
+              {userData.id === 44 && (
+              <div className="button-container">
+                <DeleteCard id={post.id} />
+              </div>
+            )}
+
 {/* //partie pas active */}
             <div className="card-footer">
               <div className="comment-icon">

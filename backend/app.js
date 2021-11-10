@@ -52,8 +52,9 @@ app.get('/jwtid',requireAuth, (req, res) => {
   res.status(200).send("good")
 });
 // *********************Route
+
 app.use("/api/user", Userroute);
 app.use("/api/post", Postroute);
-app.use("api/comment", Commentroute);
+app.use("/api/comment", Commentroute);
 
 module.exports = app;

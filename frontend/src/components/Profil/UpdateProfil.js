@@ -1,10 +1,16 @@
 import React from "react";
 import LeftNav from '../LeftNav'
 import { useSelector } from "react-redux";
-import Uploadphoto from "./UploadImg"
+// import DeleteProfil from "./DeleteProfil";
 
-const Profil = () => {
+
+
+const Profil = ({user}) => {
   const userData = useSelector((state) => state.userReducer);
+
+// const dispatch = useDispatch();
+ 
+
   return (
     <div className="profil-container">
     <LeftNav />
@@ -13,9 +19,14 @@ const Profil = () => {
         <div className="left-part">
           <h3>Photo de profil</h3>
           <img src={userData.photo}alt="user-pic" />
-      <Uploadphoto/>
-        </div>
-      </div>
+        </div>  
+       {/* {userData.id === 44 &&(
+             <div className="button-container">
+                <DeleteProfil id={userData.id} />
+              </div>
+            )} */}
+         </div>
+         
   </div>
   )
 };

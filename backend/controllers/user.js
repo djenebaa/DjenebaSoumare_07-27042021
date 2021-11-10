@@ -3,7 +3,7 @@ const Employee = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.config");
-const { createTokens, validateToken } = require("../middleware/JWT");
+const { createTokens } = require("../middleware/JWT");
 
 exports.login=(req,res)=>{
   const buffer = Buffer.from(req.body.email);
@@ -83,6 +83,7 @@ exports.users = function (req, res) {
 exports.createone = (req, res) => {
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString("base64");
+
   db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`, (err, user) => {
     //Email non disponible
     if (user.length > 0) {
@@ -124,6 +125,11 @@ exports.user = function (req, res) {
   });
 };
 exports.update = function (req, res) {
+   const post = new Employee({
+    photo: `${req.protocol}://${req.get("host")}/images/${
+          req.body.filename
+        }`, 
+   });
   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
     res
       .status(400)
@@ -131,7 +137,8 @@ exports.update = function (req, res) {
   } else {
     Employee.update(
       req.params.id,
-      new Employee(req.body),
+      post,
+      // new Employee(req.body),
       function (err, employee) {
         if (err) res.send(err);
         res.json({ error: false, message: "Employee successfully updated" });
