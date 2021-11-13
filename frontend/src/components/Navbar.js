@@ -1,9 +1,10 @@
 import React, {useContext} from 'react';
-
 import { NavLink } from "react-router-dom";
 import { LoginContext } from './AppContext';
 import Logout from "./log/Logout";
 import { useSelector } from "react-redux";
+
+// Si l'utilisateur est connecter changement de contenu de la navbar
 const Navbar =()=> {
   const loggedIn = useContext(LoginContext);
   const userData = useSelector((state) => state.userReducer);

@@ -4,7 +4,7 @@ import axios from "axios";
 import { LoginContext } from "./components/AppContext";
 import { useDispatch } from "react-redux";
 import { getUser } from "./actions/user.actions";
-
+// Verifier si l'utilisateur est connecter 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(null);
   const dispatch = useDispatch();
@@ -14,9 +14,6 @@ const App = () => {
       method: "get",  
         url: `http://localhost:4000/api/user/login`,
         withCredentials: true,
-        // headers:{
-        //   "x-access-token":localStorage.getItem("token")
-        // }
            })
         .then((response) => {
           setLoggedIn(response.data.user[0].id);
@@ -35,4 +32,3 @@ const App = () => {
   );
 };
 export default App;
-//

@@ -6,7 +6,11 @@ export const DELETE_POST = "DELETE_POST";
 export const ADD_POST = "ADD_POST";
 
 export const GET_POST_ERRORS = "GET_POST_ERRORS";
+export const EDIT_COMMENT = "EDIT_COMMENT";
+export const ADD_COMMENT = "ADD_COMMENT";
+export const GET_COMMENTS = "GET_COMMENTS";
 
+// Récuper tout les post
 export const getPosts = (num) => {
     return (dispatch) => {
       return axios
@@ -20,7 +24,7 @@ export const getPosts = (num) => {
   };
 
 
-
+// Mettre à jour un post
   export const updatePost = (postId, post_name) => {
     return (dispatch) => {
       return axios({
@@ -34,7 +38,7 @@ export const getPosts = (num) => {
         .catch((err) => console.log(err));
     };
   };
-
+// Supprimer un post
   export const deletePost = (postId) => {
     return (dispatch) => {
       return axios({
@@ -47,7 +51,7 @@ export const getPosts = (num) => {
         .catch((err) => console.log(err));
     };
   };
-
+// Ajouter un post
   export const addPost = (data) => {
     return (dispatch) => {
       return axios
@@ -61,4 +65,43 @@ export const getPosts = (num) => {
         });
     };
   };
-  
+  // Récuper les commentaire en fonction du post 
+  export const Getcomment = (postId, num) => {
+    return (dispatch) => {
+      return axios
+        .get(`http://localhost:4000/api/comment/${postId}`)
+        .then((res) => {
+          const array = res.data.slice(0, num);
+          dispatch({ type: GET_COMMENTS, payload: {postId} });
+        })
+        .catch((err) => console.log(err));
+    };
+  };
+// Poster un commentaire
+export const addComment = (postId, commenterId, text, commenterPseudo) => {
+  return (dispatch) => {
+    return axios({
+      method: "post",
+      url: `http://localhost:4000/api/comment/${postId}`,
+      data: { commenterId, text, commenterPseudo },
+    })
+      .then((res) => {
+        dispatch({ type: ADD_COMMENT, payload: { postId } });
+      })
+      .catch((err) => console.log(err));
+  };
+};
+// Modifier un commentaire
+export const editComment = (postId, commentId, text) => {
+  return (dispatch) => {
+    return axios({
+      method: "put",
+      url: `http://localhost:4000/api/comment/${postId}`,
+      data: { commentId, text },
+    })
+      .then((res) => {
+        dispatch({ type: EDIT_COMMENT, payload: { postId, commentId, text } });
+      })
+      .catch((err) => console.log(err));
+  };
+};

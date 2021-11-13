@@ -28,8 +28,6 @@ exports.create = (req, res) => {
     post_name: req.body.post_name,
     date: req.body.date,
     userId:req.body.userId, 
-   
-   
   }); 
   console.log(post);
   //   handlle null error

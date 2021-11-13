@@ -4,6 +4,7 @@ import Home from '../../pages/firstpage';
 import Profil from '../../pages/profil';
 import Navbar from '../Navbar';
 
+// Acces au contenu des pages avec un endpoint exact 
 const index = () => {
   return (
     <Router>

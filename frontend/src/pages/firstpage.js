@@ -5,9 +5,9 @@ import LeftNav from "../components/LeftNav";
 import Thread from "../components/Thread";
 import NewPostForm from "../components/Post/NewPostForm";
 
+// Après connexion changement de contenu si tout est ok
 const Home = () => {
   const login = useContext(LoginContext);
-
   return (
     <div className="home">
       <LeftNav />

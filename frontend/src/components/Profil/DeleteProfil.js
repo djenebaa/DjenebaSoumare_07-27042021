@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../actions/user.actions";
 
+// Création d'une constante pour suppimer le profil 
 const DeleteProfil = (props) => {
   const dispatch = useDispatch();
 
@@ -15,6 +16,7 @@ const DeleteProfil = (props) => {
         }
       }}
     >
+      <p> Supprimer ce compte </p>
       <img src="./img/icons/trash.svg" alt="trash" />
     </div>
   );

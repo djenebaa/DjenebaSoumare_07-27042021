@@ -10,7 +10,10 @@ let Employee = function (user) {
   this.email = user.email;
   this.password = user.password;
   this.photo = user.photo;
+  this.role = user.role;
+  
 };
+// Crée un user
 Employee.create = function (newEmp, result) {
   dbConn.query("INSERT INTO users set ?", newEmp, function (err, res) {
     if (err) {
@@ -22,10 +25,10 @@ Employee.create = function (newEmp, result) {
     }
   });
 };
-
+//  Retrouver un user par id
 Employee.findById = function (id,result, user) {
   dbConn.query(
-    "Select * from users where id= ? ",  // enlever mdp etc 
+    "Select * from users where id= ? ", 
     id,
     function (err, res) {
       if (err) {
@@ -38,7 +41,7 @@ Employee.findById = function (id,result, user) {
     }
   );
 };
-
+// Retrouver tout les user
 Employee.findAll = function (result) {
   dbConn.query("Select * from users", function (err, res) {
     if (err) {
@@ -50,17 +53,11 @@ Employee.findAll = function (result) {
     }
   });
 };
-//  `first_name`=?,`last_name`=?,`age`=?,`position`=?,`email`=?,`password`=?,
+// Mettre un jour un user
 Employee.update = function (id, employee, result) {
   dbConn.query(
-    "UPDATE users SET `photo`=? WHERE `id` = ?", // email et mdp pas hacher 
+    "UPDATE users SET `photo`=? WHERE `id` = ?", 
     [ 
-      // employee.first_name,
-      // employee.last_name,
-      // employee.age,
-      // employee.position,
-      // employee.email,
-      // employee.password,
       employee.photo,
       id
     ],
@@ -75,6 +72,8 @@ Employee.update = function (id, employee, result) {
   );
 };
 
+// Supprimer un user
+
 Employee.delete = function (id, result) {
   dbConn.query("DELETE FROM users WHERE id = ?", [id], function (err, res) {
     if (err) {
@@ -86,18 +85,4 @@ Employee.delete = function (id, result) {
   });
 };
 
-// Employee.findbyname = function (first_name, result) {
-//   dbConn.query(
-//    "Select *from users where first_name ='Admin'",
-//     first_name,
-//     function (err, res) {
-//       if (err) {
-//         console.log("error: ", err);
-//         result(err, null);
-//       } else {
-//         result(null, res);
-//       }
-//     }
-//   );
-// };
 module.exports = Employee;

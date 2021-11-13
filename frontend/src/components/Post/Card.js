@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { isEmpty, dateParser } from "../Utils";
 import { updatePost } from "../../actions/post.actions";
 import DeleteCard from "./DeleteCard";
+import CardComments from "./CardComments";
 
 const Card = ({ post }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -10,6 +11,7 @@ const Card = ({ post }) => {
   const userData = useSelector((state) => state.userReducer);
   const [isUpdated, setIsUpdated] = useState(false);
   const [textUpdate, setTextUpdate] = useState(null);
+  const [showComments, setShowComments] = useState(false);
   const dispatch = useDispatch();
 
   const updateItem = () => {
@@ -87,24 +89,25 @@ const Card = ({ post }) => {
               </div>
             )}
             {/* ***************Admin peut supprimer les post  */}
-              {userData.id === 44 && (
+              {userData.Role === "Admin" && (
               <div className="button-container">
                 <DeleteCard id={post.id} />
               </div>
             )}
 
-{/* //partie pas active */}
+{/* com*/}
             <div className="card-footer">
               <div className="comment-icon">
                 <img
+                onClick={()=> setShowComments(!showComments)}
                   src="./img/icons/message1.svg"
                   alt="comment"
                 />
-                <span>Comment</span>
+        
               </div>
               <img src="./img/icons/share.svg" alt="share" />  
-            </div>
-{/* // fin */}
+            </div>   
+         {showComments && <CardComments post={post}/>}
           </div>
         </>
       )}

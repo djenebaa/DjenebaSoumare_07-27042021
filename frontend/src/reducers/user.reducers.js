@@ -1,7 +1,7 @@
 import {
 
     GET_USER,
-    
+    UPDATE_PHOTO,
   } from "../actions/user.actions";
   
   const initialState = {};
@@ -10,6 +10,11 @@ import {
     switch (action.type) {
       case GET_USER:
         return action.payload;
+        case UPDATE_PHOTO:
+      return {
+        ...state,
+        photo: action.payload,
+      };
       default:
         return state;
     }

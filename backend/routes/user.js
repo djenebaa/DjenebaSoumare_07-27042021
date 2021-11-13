@@ -15,5 +15,4 @@ const multer = require('../middleware/multer-config')
     app.get("/:id",auth, user.user);
     app.put("/:id",multer, user.update);
     app.delete("/:id",auth, user.delete);
-
 module.exports = app;

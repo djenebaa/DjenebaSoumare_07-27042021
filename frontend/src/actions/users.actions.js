@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const GET_USERS = "GET_USERS";
-
+// Récuperer tous les utilisateur
 export const getUsers = () => {
   return (dispatch) => {
     return axios

@@ -1,11 +1,11 @@
 var dbConn = require("../config/db.config");
 
 //Employee object create
-let Comment = function (comment) {
-  this.user_id = comment.user_id;
-  this.post_id = comment.post_id;
+let Comment = function (com) {
+  this.user_id = com.user_id;
+  this.post_id = com.post_id;
   this.date = new Date();
-  this.comment = comment.comment;
+  this.comment = com.comment;
 };
 
 Comment.create = function (newcomment, result) {
@@ -20,8 +20,10 @@ Comment.create = function (newcomment, result) {
     });
   };
   
-Comment.find = function (result) {
-   dbConn.query("Select * from comment ORDER BY date desc", function (err, res) {
+Comment.find = function (post_id, result) {
+   dbConn.query("Select * from comment where post_id = ?", 
+   post_id,
+   function (err, res) {
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -61,3 +63,5 @@ Comment.delete = function (id, result) {
       }
     });
   }; 
+
+module.exports = Comment;

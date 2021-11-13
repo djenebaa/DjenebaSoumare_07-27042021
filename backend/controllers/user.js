@@ -10,18 +10,14 @@ exports.login=(req,res)=>{
   const cryptedEmail = buffer.toString("base64");
   db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`, (err,user) => {
     if (user.length > 0) {
-      //Comparaison des mots de pass
       bcrypt.compare(req.body.password, user[0].password).then((valid) => {
-        //Mots de passe pas ok
         if (!valid) {
           res.json({ auth: false, message: "wrong username/password" });
           res.status(401).json({
             message: "Mot de passe incorrect.",
           });
-          //mots de passe ok
         } else {  
           req.session.user= user;
-          // console.log(req.session.user);
           const accessToken = createTokens(user)
           res.cookie("accessToken", accessToken, {
             maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -33,6 +29,7 @@ exports.login=(req,res)=>{
             first_name: user[0].first_name,
             last_name: user[0].last_name,
             age: user[0].age,
+            role:user[0].Role,
             token: jwt.sign(
               {
                 userId: user.id,
@@ -43,7 +40,6 @@ exports.login=(req,res)=>{
               }
             ),
           });
-        //  res.json({ auth: true,result: user });
         }     
       });
     } else {
@@ -55,7 +51,7 @@ exports.login=(req,res)=>{
     }
   });
 }
-
+// ************************* Vérification si connecter
 exports.userlogin = function (req, res) {
   if (req.session.user) {
     res.send({ loggedIn: true, user: req.session.user });
@@ -63,14 +59,14 @@ exports.userlogin = function (req, res) {
     res.send({ loggedIn: false });
   }
 };
-// ************************
+// ************************ Déconnexion
 exports.logout = function (req, res) {
   res.cookie('userId', '', { maxAge: 1 });
   res.cookie('accessToken','', {maxAge:1})
   res.redirect('/');
   
 };
-// **************************
+// ************************** Get tout les users
 exports.users = function (req, res) {
   Employee.findAll(function (err, employee) {
     console.log("controller");
@@ -79,25 +75,22 @@ exports.users = function (req, res) {
     res.send(employee);
   });
 };
-// ***************************
+// *************************** Créer un user
 exports.createone = (req, res) => {
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString("base64");
 
   db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`, (err, user) => {
-    //Email non disponible
     if (user.length > 0) {
       res.status(401).json({
         message: "Email non disponible.",
       });
     } else {
-      //hashage du mots de passe
       bcrypt
         .hash(req.body.password, 10)
         .then((haspassword) => {
-          //envoie a la base de donnée
           db.query(
-            `INSERT INTO users VALUES (NOT NULL,'${req.body.first_name}', '${req.body.last_name}','${req.body.age}','${req.body.position}','${cryptedEmail}','${haspassword}','${req.body.photo}')`,
+            `INSERT INTO users VALUES (NOT NULL,'${req.body.first_name}', '${req.body.last_name}','${req.body.age}','${req.body.position}','${cryptedEmail}','${haspassword}','${req.body.photo}','${req.body.role}')`,
             (err, results) => {
               if (err) {
                 console.log(err);
@@ -117,13 +110,14 @@ exports.createone = (req, res) => {
     }
   });
 };
-// ***********************************
+// *********************************** Get un user par id 
 exports.user = function (req, res) {
   Employee.findById(req.params.id, function (err, employee) {
     if (err) res.send(err);
     res.json(employee)///ou json ?
   });
 };
+// ***************************** Mettre a jour la photo de profil
 exports.update = function (req, res) {
    const post = new Employee({
     photo: `${req.protocol}://${req.get("host")}/images/${
@@ -138,7 +132,6 @@ exports.update = function (req, res) {
     Employee.update(
       req.params.id,
       post,
-      // new Employee(req.body),
       function (err, employee) {
         if (err) res.send(err);
         res.json({ error: false, message: "Employee successfully updated" });
@@ -146,16 +139,12 @@ exports.update = function (req, res) {
     );
   }
 };
+// ****************************** Supprimer son compte
+
 exports.delete = function (req, res) {
   Employee.delete(req.params.id, function (err, employee) {
     if (err) res.send(err);
     res.json({ error: false, message: "Employee successfully deleted" });
   });
 };
-// *********************************
-// exports.admin = function (req,res) {
-//   Employee.findbyname(req.params.first_name, function (err, employee) {
-//     if (err) res.send(err);
-//     res.json(employee);
-//   });
-//   };
+

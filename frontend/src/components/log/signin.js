@@ -1,11 +1,9 @@
 import React, { useState} from "react";
 import Axios from "axios";
-// import  {LoginContext} from "../AppContext"
 const SignInForm = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const[status, setstatus]= useState("");
   Axios.defaults.withCredentials = true;
   const handleLogin = (e) => {
     e.preventDefault();
@@ -23,17 +21,15 @@ const SignInForm = () => {
       },
     })
       .then((res) => {
-        // console.log(res);
         if (res.data.errors) {
           emailError.innerHTML = res.data.errors.email;
           passwordError.innerHTML = res.data.errors.password;
-          // setstatus(res.data.erros)
+        
         } else {
           window.location = "/";
           console.log(res.data);
           localStorage.setItem("token", res.data.token);
-        //   localStorage.setItem("user", JSON.stringify(res.data));
-          // setstatus(res.data.first_name)
+          localStorage.setItem("Role", res.data.role);
         }
       })
       .catch((err) => {
@@ -87,7 +83,7 @@ const SignInForm = () => {
       />
       <div className="password error"></div>
       <input type="submit" value="Se connecter"/>
-      {/* <h1>{status}</h1> */}
+    
     
 
     </form>
@@ -95,4 +91,3 @@ const SignInForm = () => {
 };
 
 export default SignInForm;
-// onClick={LoginContext(true)} 
